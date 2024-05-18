@@ -1,0 +1,68 @@
+@import "../variables";
+
+header {
+    width: 100%;
+
+    top: 0px;
+    left: 0px;
+
+    position: fixed;
+    display: flex;
+    flex-direction: row;
+
+    background-color: $background-main;
+    border-bottom: 1px solid $outline-main;
+
+    &>* {
+        display: flex;
+    }
+
+    .header-logo {
+        flex-basis: 200px;
+        flex-grow: 1;
+        padding: 16px;
+    }
+
+    .header-actions {
+        flex-grow: 2;
+        padding: 16px;
+    }
+
+    .header-account {
+        flex-basis: 220px;
+        flex-grow: 1;
+        padding: 16px;
+
+        align-items: center;
+        justify-content: flex-end;
+
+        .user-info {
+            margin-right: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            .user-text {
+                display: flex;
+                align-items: left;
+                flex-direction: column;
+
+                .user-name {
+                    font-weight: 500;
+                }
+
+                .user-email {
+                    font-size: 0.75rem;
+                }
+            }
+
+            .user-img {
+                width: 32px;
+                height: 32px;
+                border-radius: 100%;
+            }
+        }
+
+
+    }
+}

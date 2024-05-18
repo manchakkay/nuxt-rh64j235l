@@ -1,0 +1,117 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+    provider        = "prisma-client-js"
+    previewFeatures = ["fullTextSearch", "fullTextIndex"]
+}
+
+datasource db {
+    provider          = "mysql"
+    url               = env("DATABASE_URL")
+    shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+model Location {
+    id   Int    @id @default(autoincrement())
+    name String @db.Text
+    Book Book[]
+}
+
+model BookType {
+    id   Int    @id @default(autoincrement())
+    name String
+    Book Book[]
+}
+
+// todo
+model Book {
+    id                Int               @id @default(autoincrement())
+    author            String
+    title             String
+    description       String?           @db.Text
+    formalDescription String?           @db.Text //GOST description here
+    ISBN              String?           @db.VarChar(255)
+    history           String?           @db.Text
+    type              BookType?         @relation(fields: [typeId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+    typeId            Int?
+    location          Location          @relation(fields: [locationId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+    locationId        Int
+    Comment           Comment[]
+    TagOnBook         TagOnBook[]
+    GenreOnBook       GenreOnBook[]
+    BookOwnerOnBook   BookOwnerOnBook[]
+    BookMeta          BookMeta[]
+
+    @@fulltext([author, title])
+    @@fulltext([author, title, description])
+}
+
+model Comment {
+    id      Int      @id @default(autoincrement())
+    comment String   @db.Text
+    time    DateTime @db.Timestamp()
+    book    Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+    bookId  Int
+}
+
+model Tag {
+    id        Int         @id @default(autoincrement())
+    name      String
+    TagOnBook TagOnBook[]
+}
+
+model TagOnBook {
+    tag    Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+    tagId  Int
+    book   Book @relation(fields: [bookId], references: [id], onDelete: Cascade)
+    bookId Int
+
+    @@id([tagId, bookId])
+}
+
+model Genre {
+    id          Int           @id @default(autoincrement())
+    name        String
+    GenreOnBook GenreOnBook[]
+}
+
+model GenreOnBook {
+    genre   Genre @relation(fields: [genreId], references: [id], onDelete: Cascade)
+    genreId Int
+    book    Book  @relation(fields: [bookId], references: [id], onDelete: Cascade)
+    bookId  Int
+
+    @@id([genreId, bookId])
+}
+
+model BookOwner {
+    id          Int    @id @default(autoincrement())
+    name        String
+    phoneNumber String
+    telegram    String
+    studentDoc  String
+
+    BookOwnerOnBook BookOwnerOnBook[]
+}
+
+model BookOwnerOnBook {
+    bookOwner   BookOwner @relation(fields: [bookOwnerId], references: [id], onDelete: Cascade)
+    bookOwnerId Int
+    book        Book?     @relation(fields: [bookId], references: [id], onDelete: SetNull)
+    bookId      Int?
+    startedAt   DateTime  @db.Timestamp()
+    endedAt     DateTime  @db.Timestamp()
+
+    @@id([bookOwnerId, startedAt, endedAt])
+}
+
+model BookMeta {
+    id           Int     @id @default(autoincrement())
+    thumbnailURL String? @db.VarChar(2083)
+    book         Book    @relation(fields: [bookId], references: [id], onDelete: Cascade)
+    bookId       Int
+}
