@@ -9,9 +9,6 @@
         "preview": "nuxt preview",
         "postinstall": "nuxt prepare"
     },
-    "prisma": {
-        "seed": "node prisma/seed.ts"
-    },
     "dependencies": {
         "@prisma/client": "^5.14.0",
         "next-auth": "4.21.1",
@@ -22,7 +19,6 @@
         "@sidebase/nuxt-auth": "^0.6.7",
         "@types/node": "^20.12.12",
         "nuxt": "^3.11.2",
-        "prisma": "^5.14.0",
         "sass": "^1.77.2",
         "typescript": "^5.4.5",
         "vue-router": "^4.3.0"

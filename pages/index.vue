@@ -1,5 +1,5 @@
 <template>
     <div>
-        <NuxtLink to="/library">библиотека</NuxtLink>
+        <NuxtLink to="/">Test</NuxtLink>
     </div>
 </template>
